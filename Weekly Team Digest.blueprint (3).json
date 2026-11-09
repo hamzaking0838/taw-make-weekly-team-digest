@@ -1,0 +1,1819 @@
+{
+    "name": "Weekly Team Digest",
+    "flow": [
+        {
+            "id": 2,
+            "module": "datastore:ExistRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 252102
+            },
+            "filter": null,
+            "mapper": {
+                "key": "{{formatDate(setDay(now; \"monday\"); \"YYYY-MM-DD\"; \"Asia/Karachi\")}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "Check Weekly Key"
+                },
+                "restore": {
+                    "parameters": {
+                        "datastore": {
+                            "label": "My data store",
+                            "extra": {
+                                "label": "Weekly Team Digest deduplication"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "label": "Data store",
+                        "type": "datastore",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "label": "Key",
+                        "type": "text",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "clickup:getFilteredTeamTasks",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 12871949
+            },
+            "filter": {
+                "name": "Only process a new week",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{2.exist}}",
+                            "o": "boolean:equal",
+                            "b": "false"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "limit": 100,
+                "reverse": true,
+                "team_id": "1100310000034576",
+                "order_by": "updated",
+                "subtasks": false,
+                "include_closed": false,
+                "date_updated_gt": "{{toString((timestamp - 604800) * 1000)}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "Fetch ClickUp Tasks"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Hamza's ClickUp connection",
+                            "extra": {
+                                "label": "ClickUp OAuth for Weekly Team Digest"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "team_id": {
+                            "mode": "chose",
+                            "label": "Hamza's Workspace",
+                            "extra": {
+                                "mode": "chose",
+                                "label": "Hamza's Workspace"
+                            }
+                        },
+                        "order_by": {
+                            "mode": "chose",
+                            "label": "Updated",
+                            "extra": {
+                                "mode": "chose",
+                                "label": "Updated"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:clickup2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "team_id",
+                        "type": "select",
+                        "label": "Workspace ID",
+                        "required": true
+                    },
+                    {
+                        "name": "space_ids",
+                        "type": "select",
+                        "label": "Space IDs",
+                        "multiple": true
+                    },
+                    {
+                        "name": "order_by",
+                        "type": "select",
+                        "label": "Order By",
+                        "validate": {
+                            "enum": [
+                                "id",
+                                "created",
+                                "updated",
+                                "due_date"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "reverse",
+                        "type": "boolean",
+                        "label": "Reverse Order"
+                    },
+                    {
+                        "name": "subtasks",
+                        "type": "boolean",
+                        "label": "Include Subtasks"
+                    },
+                    {
+                        "name": "folder_ids",
+                        "spec": {
+                            "type": "text",
+                            "label": "ID"
+                        },
+                        "type": "array",
+                        "label": "Folder IDs"
+                    },
+                    {
+                        "name": "list_ids",
+                        "spec": {
+                            "type": "text",
+                            "label": "ID"
+                        },
+                        "type": "array",
+                        "label": "List IDs"
+                    },
+                    {
+                        "name": "statuses",
+                        "spec": {
+                            "type": "text",
+                            "label": "Status"
+                        },
+                        "type": "array",
+                        "label": "Statuses"
+                    },
+                    {
+                        "name": "include_closed",
+                        "type": "boolean",
+                        "label": "Include Closed"
+                    },
+                    {
+                        "name": "assignees",
+                        "spec": {
+                            "type": "text",
+                            "label": "Assignees User ID"
+                        },
+                        "type": "array",
+                        "label": "Assignees"
+                    },
+                    {
+                        "name": "tags",
+                        "spec": {
+                            "type": "text",
+                            "label": "Tag"
+                        },
+                        "type": "array",
+                        "label": "Tags"
+                    },
+                    {
+                        "name": "due_date_lt",
+                        "time": true,
+                        "type": "date",
+                        "label": "Before Due Date"
+                    },
+                    {
+                        "name": "due_date_gt",
+                        "time": true,
+                        "type": "date",
+                        "label": "After Due Date"
+                    },
+                    {
+                        "name": "date_created_lt",
+                        "time": true,
+                        "type": "date",
+                        "label": "Before Created Date"
+                    },
+                    {
+                        "name": "date_created_gt",
+                        "time": true,
+                        "type": "date",
+                        "label": "After Created Date"
+                    },
+                    {
+                        "name": "date_updated_lt",
+                        "time": true,
+                        "type": "date",
+                        "label": "Before Updated Date"
+                    },
+                    {
+                        "name": "date_updated_gt",
+                        "time": true,
+                        "type": "date",
+                        "label": "After Updated Date"
+                    },
+                    {
+                        "name": "custom_fields",
+                        "spec": [
+                            {
+                                "name": "field_id",
+                                "type": "text",
+                                "label": "Custom Field ID"
+                            },
+                            {
+                                "name": "operator",
+                                "type": "select",
+                                "label": "Operator"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Custom Field Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Custom Fields"
+                    },
+                    {
+                        "name": "archived",
+                        "type": "boolean",
+                        "label": "Archived"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "default": 2
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "__IMTLENGTH__",
+                        "label": "Total number of bundles",
+                        "type": "uinteger"
+                    },
+                    {
+                        "name": "__IMTINDEX__",
+                        "label": "Bundle order position",
+                        "type": "uinteger"
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Task ID"
+                    },
+                    {
+                        "name": "sharing",
+                        "spec": [
+                            {
+                                "name": "public",
+                                "type": "boolean",
+                                "label": "Public"
+                            },
+                            {
+                                "name": "public_share_expires_on",
+                                "type": "date",
+                                "label": "Public Share Expires On"
+                            },
+                            {
+                                "name": "token",
+                                "type": "text",
+                                "label": "Token"
+                            },
+                            {
+                                "name": "seo_optimized",
+                                "type": "boolean",
+                                "label": "SEO Optimized"
+                            },
+                            {
+                                "name": "public_fields",
+                                "type": "array",
+                                "label": "Public Fields"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Sharing"
+                    },
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Task Name"
+                    },
+                    {
+                        "name": "custom_id",
+                        "type": "text",
+                        "label": "Custom ID"
+                    },
+                    {
+                        "name": "description",
+                        "type": "text",
+                        "label": "Description"
+                    },
+                    {
+                        "name": "text_content",
+                        "type": "text",
+                        "label": "Text Content"
+                    },
+                    {
+                        "name": "custom_item_id",
+                        "type": "text",
+                        "label": "Custom Item ID"
+                    },
+                    {
+                        "name": "date_done",
+                        "type": "date",
+                        "label": "Date Done"
+                    },
+                    {
+                        "name": "markdown_description",
+                        "type": "text",
+                        "label": "Markdown Description"
+                    },
+                    {
+                        "name": "top_level_parent",
+                        "type": "text",
+                        "label": "Top Level Parent"
+                    },
+                    {
+                        "name": "group_assignees",
+                        "type": "array",
+                        "label": "Group Assignees"
+                    },
+                    {
+                        "name": "locations",
+                        "type": "array",
+                        "label": "Locations"
+                    },
+                    {
+                        "name": "subtasks",
+                        "spec": {
+                            "spec": [
+                                "rpc://clickup@2/InterfaceTasks"
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Subtasks"
+                    },
+                    {
+                        "name": "status",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "ID"
+                            },
+                            {
+                                "name": "status",
+                                "type": "text",
+                                "label": "Status"
+                            },
+                            {
+                                "name": "color",
+                                "type": "color",
+                                "label": "Color"
+                            },
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "orderindex",
+                                "type": "number",
+                                "label": "Order Index"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Status"
+                    },
+                    {
+                        "name": "orderindex",
+                        "type": "text",
+                        "label": "Order Index"
+                    },
+                    {
+                        "name": "date_created",
+                        "type": "date",
+                        "label": "Date Created"
+                    },
+                    {
+                        "name": "date_updated",
+                        "type": "date",
+                        "label": "Date Updated"
+                    },
+                    {
+                        "name": "date_closed",
+                        "type": "date",
+                        "label": "Date Closed"
+                    },
+                    {
+                        "name": "archived",
+                        "type": "boolean",
+                        "label": "Archived"
+                    },
+                    {
+                        "name": "creator",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "number",
+                                "label": "User ID"
+                            },
+                            {
+                                "name": "username",
+                                "type": "text",
+                                "label": "Username"
+                            },
+                            {
+                                "name": "color",
+                                "type": "color",
+                                "label": "Color"
+                            },
+                            {
+                                "name": "profilePicture",
+                                "type": "text",
+                                "label": "Profile Picture"
+                            },
+                            {
+                                "name": "email",
+                                "type": "text",
+                                "label": "Email"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Creator"
+                    },
+                    {
+                        "name": "assignees",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "id",
+                                    "type": "number",
+                                    "label": "User ID"
+                                },
+                                {
+                                    "name": "username",
+                                    "type": "text",
+                                    "label": "Username"
+                                },
+                                {
+                                    "name": "color",
+                                    "type": "color",
+                                    "label": "Color"
+                                },
+                                {
+                                    "name": "initials",
+                                    "type": "text",
+                                    "label": "Initials"
+                                },
+                                {
+                                    "name": "profilePicture",
+                                    "type": "url",
+                                    "label": "Profile Picture"
+                                },
+                                {
+                                    "name": "email",
+                                    "type": "email",
+                                    "label": "Email"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Assignees"
+                    },
+                    {
+                        "name": "checklists",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "ID"
+                            },
+                            {
+                                "name": "task_id",
+                                "type": "text",
+                                "label": "Task ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            },
+                            {
+                                "name": "date_created",
+                                "type": "date",
+                                "label": "Date Created"
+                            },
+                            {
+                                "name": "orderindex",
+                                "type": "number",
+                                "label": "Orderindex"
+                            },
+                            {
+                                "name": "creator",
+                                "type": "number",
+                                "label": "Creator"
+                            },
+                            {
+                                "name": "resolved",
+                                "type": "number",
+                                "label": "Resolved"
+                            },
+                            {
+                                "name": "unresolved",
+                                "type": "number",
+                                "label": "Unresolved"
+                            },
+                            {
+                                "name": "items",
+                                "spec": {
+                                    "spec": [
+                                        {
+                                            "name": "id",
+                                            "type": "text",
+                                            "label": "ID"
+                                        },
+                                        {
+                                            "name": "name",
+                                            "type": "text",
+                                            "label": "Name"
+                                        },
+                                        {
+                                            "name": "orderindex",
+                                            "type": "number",
+                                            "label": "Orderindex"
+                                        },
+                                        {
+                                            "name": "assignee",
+                                            "type": "text",
+                                            "label": "Assignee"
+                                        },
+                                        {
+                                            "name": "group_assignee",
+                                            "type": "text",
+                                            "label": "Group Assignee"
+                                        },
+                                        {
+                                            "name": "resolved",
+                                            "type": "boolean",
+                                            "label": "Resolved"
+                                        },
+                                        {
+                                            "name": "parent",
+                                            "type": "text",
+                                            "label": "Parent"
+                                        },
+                                        {
+                                            "name": "date_created",
+                                            "type": "date",
+                                            "label": "Date Created"
+                                        },
+                                        {
+                                            "name": "children",
+                                            "type": "array",
+                                            "label": "Children"
+                                        }
+                                    ],
+                                    "type": "collection"
+                                },
+                                "type": "array",
+                                "label": "Items"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Checklists"
+                    },
+                    {
+                        "name": "watchers",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "id",
+                                    "type": "number",
+                                    "label": "User ID"
+                                },
+                                {
+                                    "name": "username",
+                                    "type": "text",
+                                    "label": "Username"
+                                },
+                                {
+                                    "name": "color",
+                                    "type": "color",
+                                    "label": "Color"
+                                },
+                                {
+                                    "name": "initials",
+                                    "type": "text",
+                                    "label": "Initials"
+                                },
+                                {
+                                    "name": "profilePicture",
+                                    "type": "url",
+                                    "label": "Profile Picture"
+                                },
+                                {
+                                    "name": "email",
+                                    "type": "email",
+                                    "label": "Email"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Watchers"
+                    },
+                    {
+                        "name": "tags",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "name",
+                                    "type": "text",
+                                    "label": "Name"
+                                },
+                                {
+                                    "name": "creator",
+                                    "type": "text",
+                                    "label": "Creator"
+                                },
+                                {
+                                    "name": "tag_fg",
+                                    "type": "color",
+                                    "label": "Tag Fg"
+                                },
+                                {
+                                    "name": "tag_bg",
+                                    "type": "color",
+                                    "label": "Tag Bg"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Tags"
+                    },
+                    {
+                        "name": "parent",
+                        "type": "text",
+                        "label": "Parent"
+                    },
+                    {
+                        "name": "linked_tasks",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "task_id",
+                                    "type": "text",
+                                    "label": "Task ID"
+                                },
+                                {
+                                    "name": "link_id",
+                                    "type": "text",
+                                    "label": "Link ID"
+                                },
+                                {
+                                    "name": "date_created",
+                                    "type": "date",
+                                    "label": "Date Created"
+                                },
+                                {
+                                    "name": "userid",
+                                    "type": "text",
+                                    "label": "User ID"
+                                },
+                                {
+                                    "name": "workspace_id",
+                                    "type": "text",
+                                    "label": "Workspace ID"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Linked Tasks"
+                    },
+                    {
+                        "name": "permission_level",
+                        "type": "text",
+                        "label": "Permission Level"
+                    },
+                    {
+                        "name": "priority",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "ID"
+                            },
+                            {
+                                "name": "priority",
+                                "type": "text",
+                                "label": "Priority"
+                            },
+                            {
+                                "name": "color",
+                                "type": "color",
+                                "label": "Color"
+                            },
+                            {
+                                "name": "orderindex",
+                                "type": "text",
+                                "label": "Order Index"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Priority"
+                    },
+                    {
+                        "name": "due_date",
+                        "type": "date",
+                        "label": "Due Date"
+                    },
+                    {
+                        "name": "start_date",
+                        "type": "date",
+                        "label": "Start Date"
+                    },
+                    {
+                        "name": "points",
+                        "type": "text",
+                        "label": "Points"
+                    },
+                    {
+                        "name": "time_estimate",
+                        "type": "integer",
+                        "label": "Time Estimate (in minutes)"
+                    },
+                    {
+                        "name": "time_spent",
+                        "type": "uinteger",
+                        "label": "Time Spent"
+                    },
+                    {
+                        "name": "list",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "List ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "List Name"
+                            },
+                            {
+                                "name": "access",
+                                "type": "boolean",
+                                "label": "Access"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "List"
+                    },
+                    {
+                        "name": "project",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "Project ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Project Name"
+                            },
+                            {
+                                "name": "hidden",
+                                "type": "boolean",
+                                "label": "Hidden"
+                            },
+                            {
+                                "name": "access",
+                                "type": "boolean",
+                                "label": "Access"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Project"
+                    },
+                    {
+                        "name": "folder",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "Folder ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Folder Name"
+                            },
+                            {
+                                "name": "hidden",
+                                "type": "boolean",
+                                "label": "Hidden"
+                            },
+                            {
+                                "name": "access",
+                                "type": "boolean",
+                                "label": "Access"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Folder"
+                    },
+                    {
+                        "name": "space",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "Space ID"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Space"
+                    },
+                    {
+                        "name": "dependencies",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "task_id",
+                                    "type": "text",
+                                    "label": "Task ID"
+                                },
+                                {
+                                    "name": "depends_on",
+                                    "type": "text",
+                                    "label": "Depends On Task ID"
+                                },
+                                {
+                                    "name": "type",
+                                    "type": "number",
+                                    "label": "Type"
+                                },
+                                {
+                                    "name": "date_created",
+                                    "type": "date",
+                                    "label": "Date Created"
+                                },
+                                {
+                                    "name": "userid",
+                                    "type": "text",
+                                    "label": "User ID"
+                                },
+                                {
+                                    "name": "workspace_id",
+                                    "type": "text",
+                                    "label": "Workspace ID"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Dependencies"
+                    },
+                    {
+                        "name": "team_id",
+                        "type": "text",
+                        "label": "Workspace ID"
+                    },
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "URL"
+                    },
+                    {
+                        "name": "custom_fields_original",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "id",
+                                    "type": "text",
+                                    "label": "ID"
+                                },
+                                {
+                                    "name": "name",
+                                    "type": "text",
+                                    "label": "Name"
+                                },
+                                {
+                                    "name": "type",
+                                    "type": "text",
+                                    "label": "Type"
+                                },
+                                {
+                                    "name": "type_config",
+                                    "spec": [],
+                                    "type": "collection",
+                                    "label": "Type Config"
+                                },
+                                {
+                                    "name": "date_created",
+                                    "type": "date",
+                                    "label": "Date Created"
+                                },
+                                {
+                                    "name": "hide_from_guests",
+                                    "type": "boolean",
+                                    "label": "Hide From Guests"
+                                },
+                                {
+                                    "name": "value",
+                                    "type": "any",
+                                    "label": "Value"
+                                },
+                                {
+                                    "name": "required",
+                                    "type": "boolean",
+                                    "label": "Required"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Custom Fields (original)"
+                    },
+                    {
+                        "name": "custom_fields",
+                        "spec": [],
+                        "type": "collection",
+                        "label": "Custom Fields"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 3,
+                "rowSeparator": "\n"
+            },
+            "mapper": {
+                "value": "Task: {{3.name}}\nStatus: {{3.status.status}}\nAssignee: {{ifempty(3.assignees[1].username; \"Unassigned\")}}\nDue date: {{ifempty(3.due_date; \"Not provided\")}}\nUpdated: {{3.date_updated}}\nDetails: {{ifempty(3.description; 3.text_content)}}\n---"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "Aggregate Task Updates"
+                },
+                "restore": {
+                    "parameters": {
+                        "rowSeparator": {
+                            "mode": "chose",
+                            "label": "New row"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "rowSeparator",
+                        "type": "select",
+                        "label": "Row separator",
+                        "advanced": true,
+                        "required": false,
+                        "validate": {
+                            "enum": [
+                                "\n",
+                                "\t",
+                                "other"
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "value",
+                        "type": "text",
+                        "label": "Text"
+                    }
+                ]
+            },
+            "flags": {
+                "stopIfEmpty": true
+            }
+        },
+        {
+            "id": 13,
+            "module": "gemini-ai:simpleTextPrompt",
+            "version": 1,
+            "parameters": {},
+            "filter": null,
+            "mapper": {
+                "model": "gemini-2.5-flash",
+                "textPrompt": "You are an expert team reporting assistant.\r\n\r\nAnalyze the following ClickUp task updates and generate a professional weekly team digest.\r\n\r\nOrganize the report into these four sections:\r\n\r\n1. Key Accomplishments\r\n2. Work Completed\r\n3. Current Blockers\r\n4. Next Week's Priorities\r\n\r\nUse only the information provided in the task updates. Do not invent achievements, deadlines, tasks, or blockers. If information is missing, mention that it was not provided.\r\n\r\nWrite in simple, clear, professional English.\r\n\r\n{{4.text}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "Generate AI Digest"
+                },
+                "restore": {
+                    "expect": {
+                        "model": {
+                            "mode": "chose",
+                            "label": "Gemini 2.5 Flash"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "mappable": false,
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "gemini-2.5-flash",
+                                "gemini-4-argon",
+                                "gemini-3.8-flash",
+                                "gemini-3.6-flash",
+                                "gemini-3.1-pro-preview",
+                                "gemini-3-flash-preview",
+                                "gemini-2.5-pro"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "textPrompt",
+                        "type": "text",
+                        "label": "Text prompt",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "airtable:ActionCreateRecord",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 12871528
+            },
+            "mapper": {
+                "base": "appvfztPgzwQ6pPAz",
+                "table": "tblPllK3fi6lsLfcA",
+                "record": {
+                    "fldRPgj2nQQ4LEWFu": "Weekly Team Digest",
+                    "fldaILu3Nv5xIfVKK": "{{13.result}}",
+                    "fldyQPiOgSwJpUfbq": "Done"
+                },
+                "typecast": false,
+                "useColumnId": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 2100,
+                    "y": 0,
+                    "name": "Save Digest"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Hamza's Airtable OAuth connection"
+                        }
+                    },
+                    "expect": {
+                        "base": {
+                            "mode": "chose",
+                            "label": "IT Project Tracker"
+                        },
+                        "table": {
+                            "mode": "chose",
+                            "label": "Weekly Digests"
+                        },
+                        "record": {
+                            "nested": {
+                                "fldyQPiOgSwJpUfbq": {
+                                    "mode": "chose",
+                                    "label": "Done"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable3,airtable2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "mappable": false,
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "mappable": false,
+                        "required": true
+                    },
+                    {
+                        "name": "record",
+                        "spec": [
+                            {
+                                "name": "fldRPgj2nQQ4LEWFu",
+                                "label": "Name",
+                                "type": "text"
+                            },
+                            {
+                                "name": "fldaILu3Nv5xIfVKK",
+                                "label": "Notes",
+                                "type": "text"
+                            },
+                            {
+                                "name": "fld0j4YBnXXVlvL2y",
+                                "label": "Assignee",
+                                "type": "collection",
+                                "spec": [
+                                    {
+                                        "name": "id",
+                                        "type": "text",
+                                        "label": "ID"
+                                    },
+                                    {
+                                        "name": "email",
+                                        "type": "email",
+                                        "label": "Email"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "fldyQPiOgSwJpUfbq",
+                                "label": "Status",
+                                "type": "select",
+                                "mode": "edit",
+                                "dynamic": true,
+                                "validate": {
+                                    "enum": [
+                                        "Todo",
+                                        "In progress",
+                                        "Done"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "fldyRadmrcjRoGnH2",
+                                "label": "Attachments",
+                                "type": "array",
+                                "editable": true,
+                                "spec": [
+                                    {
+                                        "name": "url",
+                                        "label": "File URL",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "name": "filename",
+                                        "label": "File name",
+                                        "type": "filename"
+                                    }
+                                ]
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
+                    },
+                    {
+                        "name": "typecast",
+                        "type": "boolean",
+                        "label": "Smart links",
+                        "default": false,
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use column ID",
+                        "default": false,
+                        "advanced": true,
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created time"
+                    },
+                    {
+                        "name": "Name",
+                        "label": "Name",
+                        "type": "text"
+                    },
+                    {
+                        "name": "Notes",
+                        "label": "Notes",
+                        "type": "text",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Assignee",
+                        "label": "Assignee",
+                        "type": "collection",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "ID"
+                            },
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Status",
+                        "label": "Status",
+                        "type": "text"
+                    },
+                    {
+                        "name": "Attachments",
+                        "label": "Attachments",
+                        "type": "array",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "ID"
+                            },
+                            {
+                                "name": "width",
+                                "type": "uinteger",
+                                "label": "Width"
+                            },
+                            {
+                                "name": "height",
+                                "type": "uinteger",
+                                "label": "Height"
+                            },
+                            {
+                                "name": "url",
+                                "type": "url",
+                                "label": "URL"
+                            },
+                            {
+                                "name": "filename",
+                                "type": "filename",
+                                "label": "File name"
+                            },
+                            {
+                                "name": "size",
+                                "type": "uinteger",
+                                "label": "Size"
+                            },
+                            {
+                                "name": "type",
+                                "label": "MIME type",
+                                "type": "text"
+                            },
+                            {
+                                "name": "thumbnails",
+                                "label": "Thumbnails",
+                                "type": "collection",
+                                "spec": [
+                                    {
+                                        "name": "small",
+                                        "label": "Small",
+                                        "type": "collection",
+                                        "spec": [
+                                            {
+                                                "name": "url",
+                                                "type": "url",
+                                                "label": "URL"
+                                            },
+                                            {
+                                                "name": "width",
+                                                "type": "uinteger",
+                                                "label": "Width"
+                                            },
+                                            {
+                                                "name": "height",
+                                                "type": "uinteger",
+                                                "label": "Height"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "large",
+                                        "label": "Large",
+                                        "type": "collection",
+                                        "spec": [
+                                            {
+                                                "name": "url",
+                                                "type": "url",
+                                                "label": "URL"
+                                            },
+                                            {
+                                                "name": "width",
+                                                "type": "uinteger",
+                                                "label": "Width"
+                                            },
+                                            {
+                                                "name": "height",
+                                                "type": "uinteger",
+                                                "label": "Height"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "full",
+                                        "label": "Full",
+                                        "type": "collection",
+                                        "spec": [
+                                            {
+                                                "name": "url",
+                                                "type": "url",
+                                                "label": "URL"
+                                            },
+                                            {
+                                                "name": "width",
+                                                "type": "uinteger",
+                                                "label": "Width"
+                                            },
+                                            {
+                                                "name": "height",
+                                                "type": "uinteger",
+                                                "label": "Height"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Attachment Summary",
+                        "label": "Attachment Summary",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "slack:CreateMessage",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 12871703
+            },
+            "mapper": {
+                "channelWType": "list",
+                "channelType": "public",
+                "channel": "C0CEP6991NY",
+                "text": "Weekly Team Digest\n\n{{13.result}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 2400,
+                    "y": 0,
+                    "name": "Post to Slack"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Hamza's Slack (bot) connection"
+                        }
+                    },
+                    "expect": {
+                        "channelWType": {
+                            "mode": "chose",
+                            "label": "Select from the list",
+                            "nested": [
+                                {
+                                    "name": "channelType",
+                                    "type": "select",
+                                    "label": "Channel type",
+                                    "options": [
+                                        {
+                                            "label": "Public channel",
+                                            "value": "public",
+                                            "nested": [
+                                                {
+                                                    "name": "channel",
+                                                    "type": "select",
+                                                    "label": "Public channel",
+                                                    "options": "rpc://slack@4/PublicChannels",
+                                                    "required": true
+                                                }
+                                            ],
+                                            "default": true
+                                        },
+                                        {
+                                            "label": "Private channel",
+                                            "value": "private",
+                                            "nested": [
+                                                {
+                                                    "name": "channel",
+                                                    "type": "select",
+                                                    "label": "Private channel",
+                                                    "options": "rpc://slack@4/PrivateChannels",
+                                                    "required": true
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Direct message",
+                                            "value": "im",
+                                            "nested": [
+                                                {
+                                                    "name": "idType",
+                                                    "type": "select",
+                                                    "label": "ID type",
+                                                    "default": "channel",
+                                                    "options": {
+                                                        "store": [
+                                                            {
+                                                                "label": "Channel ID",
+                                                                "value": "channel",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "channel",
+                                                                        "type": "select",
+                                                                        "label": "User (Channel ID)",
+                                                                        "options": "rpc://slack@4/IMChannels",
+                                                                        "required": true
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "label": "User ID",
+                                                                "value": "user",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "channel",
+                                                                        "type": "text",
+                                                                        "label": "User (User ID)",
+                                                                        "required": true
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "label": "Username",
+                                                                "value": "username",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "channel",
+                                                                        "type": "text",
+                                                                        "label": "User (Username)",
+                                                                        "required": true
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    "required": true
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Direct message to multiple people",
+                                            "value": "mpim",
+                                            "nested": [
+                                                {
+                                                    "name": "channel",
+                                                    "type": "select",
+                                                    "label": "Direct message to multiple people",
+                                                    "options": "rpc://slack@4/MPIMChannels",
+                                                    "required": true
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "mappable": false,
+                                    "required": true
+                                }
+                            ]
+                        },
+                        "channelType": {
+                            "mode": "chose",
+                            "label": "Public channel",
+                            "nested": [
+                                {
+                                    "name": "channel",
+                                    "type": "select",
+                                    "label": "Public channel",
+                                    "options": "rpc://slack@4/PublicChannels",
+                                    "required": true
+                                }
+                            ]
+                        },
+                        "channel": {
+                            "mode": "chose",
+                            "label": "all-weekly-team-digest"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:slack2,slack3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "channelWType",
+                        "type": "select",
+                        "label": "Enter a channel ID or name",
+                        "mappable": false,
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "manualy",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "channelType",
+                        "type": "select",
+                        "label": "Channel type",
+                        "mappable": false,
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "public",
+                                "private",
+                                "im",
+                                "mpim"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "channel",
+                        "type": "select",
+                        "label": "Public channel",
+                        "required": true
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": false
+                    },
+                    {
+                        "name": "blocks",
+                        "type": "text",
+                        "label": "Blocks",
+                        "required": false
+                    },
+                    {
+                        "name": "thread_ts",
+                        "type": "text",
+                        "label": "Thread message ID (time stamp)",
+                        "advanced": true,
+                        "required": false
+                    },
+                    {
+                        "name": "reply_broadcast",
+                        "type": "boolean",
+                        "label": "Reply broadcast",
+                        "advanced": true,
+                        "required": false
+                    },
+                    {
+                        "name": "link_names",
+                        "type": "boolean",
+                        "label": "Link names",
+                        "advanced": true,
+                        "required": false
+                    },
+                    {
+                        "name": "parse",
+                        "type": "boolean",
+                        "label": "Parse message text",
+                        "default": false,
+                        "advanced": true,
+                        "required": false
+                    },
+                    {
+                        "name": "mrkdwn",
+                        "type": "boolean",
+                        "label": "Use markdown",
+                        "default": true,
+                        "advanced": true,
+                        "required": false
+                    },
+                    {
+                        "name": "unfurl_links",
+                        "type": "boolean",
+                        "label": "Unfurl primarily text-based content",
+                        "advanced": true,
+                        "required": false
+                    },
+                    {
+                        "name": "unfurl_media",
+                        "type": "boolean",
+                        "label": "Unfurl media content",
+                        "advanced": true,
+                        "required": false
+                    },
+                    {
+                        "name": "icon_emoji",
+                        "type": "text",
+                        "label": "Icon emoji",
+                        "advanced": true,
+                        "required": false
+                    },
+                    {
+                        "name": "icon_url",
+                        "type": "url",
+                        "label": "Icon url",
+                        "advanced": true,
+                        "required": false
+                    },
+                    {
+                        "name": "username",
+                        "type": "text",
+                        "label": "User name",
+                        "advanced": true,
+                        "required": false
+                    }
+                ]
+            },
+            "onerror": [
+                {
+                    "id": 9,
+                    "module": "builtin:Break",
+                    "version": 1,
+                    "parameters": {},
+                    "mapper": {
+                        "retry": true,
+                        "count": 3,
+                        "interval": 15
+                    },
+                    "metadata": {
+                        "designer": {
+                            "x": 1800,
+                            "y": 150
+                        },
+                        "restore": {},
+                        "expect": [
+                            {
+                                "name": "retry",
+                                "type": "boolean",
+                                "label": "Retry automatically",
+                                "required": true,
+                                "editable": true,
+                                "default": true
+                            },
+                            {
+                                "name": "count",
+                                "type": "uinteger",
+                                "label": "Number of retries",
+                                "required": true,
+                                "default": 3,
+                                "validate": {
+                                    "min": 1,
+                                    "max": 10000
+                                }
+                            },
+                            {
+                                "name": "interval",
+                                "type": "uinteger",
+                                "label": "Minutes between retries",
+                                "required": true,
+                                "default": 15,
+                                "validate": {
+                                    "min": 1,
+                                    "max": 44640
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "module": "datastore:AddRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 252102
+            },
+            "mapper": {
+                "overwrite": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 2700,
+                    "y": -150,
+                    "name": "Mark Week Posted"
+                },
+                "restore": {
+                    "parameters": {
+                        "datastore": {
+                            "label": "My data store",
+                            "extra": {
+                                "label": "Weekly Team Digest deduplication"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "label": "Data store",
+                        "type": "datastore",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "label": "Key",
+                        "type": "text"
+                    },
+                    {
+                        "name": "overwrite",
+                        "label": "Overwrite an existing record",
+                        "type": "boolean",
+                        "required": true,
+                        "default": false
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": true,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}
