@@ -1,5 +1,9 @@
 # Project 2 — Weekly Team Digest Automation
 
+## Demo Video
+
+[Watch Project Demo on Loom](https://www.loom.com/share/d57e865f8eb541d282d5b12a8904f33f)
+
 ## Overview
 
 The Weekly Team Digest automation retrieves recently updated ClickUp tasks, combines the task information, generates a weekly summary using Gemini 2.5 Flash, saves the digest to Airtable, and posts it to Slack.
