@@ -213,3 +213,5 @@ Do not upload API keys, OAuth tokens, passwords, connection secrets, or private 
 - Slack: Working
 - Scenario: Inactive
 - GitHub documentation: README.md
+
+Latest Make.com workflow blueprint is included in workflow.json.
